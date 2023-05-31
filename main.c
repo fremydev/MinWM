@@ -6,7 +6,7 @@
 int main () {
 	Display *dpy;
 	XEvent ev;
-	Window root;
+	Window root, window;
 
 	if(!(dpy = XOpenDisplay(0x0))) return 1;
 
@@ -16,11 +16,18 @@ int main () {
 			GrabModeAsync, GrabModeAsync);
 	XGrabKey(dpy, XKeysymToKeycode(dpy, XK_Return), Mod1Mask, root, True,
 			GrabModeAsync, GrabModeAsync);
+	
+	XSelectInput(dpy, root, SubstructureRedirectMask | SubstructureNotifyMask);
 
 	for(;;) {
 		XNextEvent(dpy, &ev);
 
-		if (ev.type == KeyPress) {
+		if (ev.type == CreateNotify) {
+			window = ev.xcreatewindow.window;
+			XMoveResizeWindow(dpy, window, 30, 30, (1920-30), (1080-30));	
+			XMapWindow(dpy, window);
+		}
+		else if (ev.type == KeyPress) {
 			KeyCode keycode = ev.xkey.keycode;
 			KeySym keysym = XkbKeycodeToKeysym(dpy, keycode, 0, 0);
 
