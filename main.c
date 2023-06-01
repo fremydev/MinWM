@@ -2,6 +2,7 @@
 #include <X11/Xlib.h>
 #include <X11/XKBlib.h>
 #include <X11/keysym.h>
+#include <X11/Xatom.h>
 
 int main () {
 	Display *dpy;
@@ -12,7 +13,7 @@ int main () {
 
 	root = DefaultRootWindow(dpy);
 
-	XGrabKey(dpy, XKeysymToKeycode(dpy, XK_q), Mod1Mask, root, True,
+	XGrabKey(dpy, XKeysymToKeycode(dpy, XK_d), Mod1Mask, root, True,
 			GrabModeAsync, GrabModeAsync);
 	XGrabKey(dpy, XKeysymToKeycode(dpy, XK_Return), Mod1Mask, root, True,
 			GrabModeAsync, GrabModeAsync);
@@ -22,9 +23,9 @@ int main () {
 	for(;;) {
 		XNextEvent(dpy, &ev);
 
-		if (ev.type == CreateNotify) {
+		if (ev.type == MapRequest) {
 			window = ev.xcreatewindow.window;
-			XMoveResizeWindow(dpy, window, 30, 30, (1920-30), (1080-30));	
+			XMoveResizeWindow(dpy, window, 30, 30, (2560-60), (1440-60));	
 			XMapWindow(dpy, window);
 		}
 		else if (ev.type == KeyPress) {
@@ -33,8 +34,8 @@ int main () {
 
 			if (keysym == XK_Return && ev.xkey.state == Mod1Mask)
 				system("st &");
-			else if (keysym == XK_q && ev.xkey.state == Mod1Mask)
-				XDestroyWindow(dpy, ev.xkey.subwindow);
+			else if (keysym == XK_d && ev.xkey.state == Mod1Mask)
+				system("dmenu_run &");
 		}
 	}
 
