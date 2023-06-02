@@ -18,6 +18,8 @@ int main () {
 
 	XGrabKey(dpy, XKeysymToKeycode(dpy, XK_d), Mod1Mask, root, True,
 			GrabModeAsync, GrabModeAsync);
+	XGrabKey(dpy, XKeysymToKeycode(dpy, XK_j), Mod1Mask, root, True,
+			GrabModeAsync, GrabModeAsync);
 	XGrabKey(dpy, XKeysymToKeycode(dpy, XK_Return), Mod1Mask, root, True,
 			GrabModeAsync, GrabModeAsync);
 	
@@ -43,6 +45,8 @@ int main () {
 
 			if (keysym == XK_Return && ev.xkey.state == Mod1Mask)
 				system("st &");
+			else if (keysym == XK_j && ev.xkey.state == Mod1Mask && ev.xkey.subwindow != None)
+				XLowerWindow(dpy,ev.xkey.subwindow);
 			else if (keysym == XK_d && ev.xkey.state == Mod1Mask)
 				system("dmenu_run &");
 		}
