@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include <X11/Xlib.h>
 #include <X11/XKBlib.h>
 #include <X11/extensions/Xrandr.h>
@@ -30,10 +31,15 @@ int main () {
 		XNextEvent(dpy, &ev);
 
 		if (ev.type == MapRequest) {
-			crtc_info = XRRGetCrtcInfo(dpy, screen, screen->crtcs[0]);
+			XRROutputInfo *out_info_hdmi= XRRGetOutputInfo(dpy, screen, screen->outputs[1]);
+
+			if (out_info_hdmi->crtc != 0)
+				crtc_info = XRRGetCrtcInfo(dpy, screen, screen->crtcs[1]);
+			else
+				crtc_info = XRRGetCrtcInfo(dpy, screen, screen->crtcs[0]);
 
 			window = ev.xcreatewindow.window;
-			XMoveResizeWindow(dpy, window, 30, 30, ((crtc_info->width)-60), ((crtc_info->height)-60));	
+			XMoveResizeWindow(dpy, window, 0, 0, crtc_info->width, crtc_info->height);	
 			XMapWindow(dpy, window);
 
 
