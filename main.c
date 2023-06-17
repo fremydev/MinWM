@@ -42,6 +42,7 @@ int main () {
 			window = ev.xcreatewindow.window;
 			XMoveResizeWindow(dpy, window, 0, 0, crtc_info->width, crtc_info->height);
 			XMapWindow(dpy, window);
+			XSetInputFocus(dpy, ev.xcreatewindow.window, RevertToPointerRoot, CurrentTime);
 			XSync(dpy, False);
 		}
 		else if (ev.type == KeyPress) {
